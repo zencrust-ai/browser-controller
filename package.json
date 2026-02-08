@@ -1,0 +1,23 @@
+{
+  "name": "browser-controller",
+  "version": "1.0.0",
+  "description": "Node.js browser automation skill for OpenClaw",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "install": "npm install puppeteer",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "browser",
+    "automation",
+    "puppeteer",
+    "openclaw",
+    "skill"
+  ],
+  "author": "zencrust",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^23.0.0"
+  }
+}
