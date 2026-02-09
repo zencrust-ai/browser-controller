@@ -30,14 +30,45 @@ on run argv
         else if command is "type" then
             if (count of argv) < 2 then return "Error: Missing text"
             set text to item 2 of argv
+            
+            -- Replace | with actual newlines for multiline
+            set oldDelim to AppleScript's text item delimiters
+            set AppleScript's text item delimiters to "|"
+            set textItems to every text item of text
+            set AppleScript's text item delimiters to linefeed
+            set text to textItems as text
+            set AppleScript's text item delimiters to oldDelim
+            
             tell application "System Events" to keystroke text
             return "OK: Typed " & (length of text) & " chars"
+            
+        else if command is "typefile" then
+            -- Read text from file
+            if (count of argv) < 2 then return "Error: Missing file path"
+            set filePath to item 2 of argv
+            try
+                set text to do shell script "cat " & quoted form of filePath
+                do shell script "rm -f " & quoted form of filePath
+            on error
+                return "Error: Cannot read file"
+            end try
+            
+            tell application "System Events" to keystroke text
+            return "OK: Typed " & (length of text) & " chars from file"
             
         else if command is "post" then
             tell front document
                 do JavaScript "try { var btn = document.querySelector('[data-testid=\"tweetButtonInline\"]'); if(btn) btn.click(); } catch(e) { }"
             end tell
             return "OK: Post clicked"
+            
+        else if command is "click" then
+            if (count of argv) < 2 then return "Error: Missing selector"
+            set selector to item 2 of argv
+            tell front document
+                do JavaScript "try { var el = document.querySelector('" & selector & "'); if(el) el.click(); } catch(e) { console.log('Click error: ' + e); }"
+            end tell
+            return "OK: Clicked " & selector
             
         else if command is "geturl" then
             try

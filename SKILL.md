@@ -37,7 +37,10 @@ osascript browser.scpt type "Ciao da Safari!"
 osascript browser.scpt wait 2
 
 # Clicca Post (X)
-osavascript browser.scpt post
+osascript browser.scpt post
+
+# Clicca elemento CSS
+osascript browser.scpt click "[data-testid='tweetButtonInline']"
 
 # Ottieni URL corrente
 osascript browser.scpt geturl
@@ -123,12 +126,17 @@ postToX("Test da BrowserController! 🚀");
 
 ## Selettori CSS per X (Twitter)
 
-| Elemento | Selettore |
-|----------|-----------|
-| Textarea post | `[data-testid='tweetTextarea_0']` |
-| Pulsante Post | `[data-testid='tweetButtonInline']` |
-| Pulsante Post alt | `[data-testid='tweetButton']` |
-| Profile menu | `[data-testid='userActions']` |
+| Elemento | Selettore | Comando |
+|----------|-----------|---------|
+| Textarea post | `[data-testid='tweetTextarea_0']` | click/type |
+| Pulsante Post | `[data-testid='tweetButtonInline']` | click/post |
+| Pulsante Post alt | `[data-testid='tweetButton']` | click |
+| Profile menu | `[data-testid='userActions']` | click |
+
+### Esempio Uso Click
+```bash
+osascript browser.scpt click "[data-testid='tweetButtonInline']"
+```
 
 ## Note
 

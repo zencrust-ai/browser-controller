@@ -21,51 +21,20 @@ A simple and fast way to control Safari on macOS using AppleScript and Node.js. 
 
 - macOS
 - Safari browser
-- Node.js (optional for Node.js wrapper)
-
-### Installation
-
-```bash
-cd ~/.openclaw/skills/browser-controller
-npm install
-```
 
 ### Usage
-
-#### AppleScript (Recommended)
-
-```bash
-# Navigate to URL
-osascript browser.scpt navigate "https://x.com"
-
-# Click an element
-osascript browser.scpt click "[data-testid='tweetTextarea_0']"
-
-# Type text
-osascript browser.scpt type "Hello world!"
-
-# Wait 3 seconds
-osascript browser.scpt wait 3
-
-# Post tweet
-osascript browser.scpt post
-```
-
-#### Ready-to-use Script
 
 ```bash
 # Post to X with custom message
 ./x-post.sh "Your tweet text here"
 ```
 
-#### Node.js Wrapper
+### How it works
 
-```javascript
-const { execSync } = require('child_process');
-
-// Example: Navigate to X
-execSync('osascript browser.scpt navigate "https://x.com"');
-```
+1. Opens `https://x.com/compose/post` directly
+2. Focuses on the tweet textarea
+3. Types your message
+4. Clicks the Post button
 
 ## Files
 
