@@ -1,4 +1,4 @@
-# BrowserController
+# BrowserController Skill
 
 Node.js skill for controlling Safari browser via AppleScript - for X/Twitter posting.
 
@@ -15,35 +15,48 @@ A simple and fast way to control Safari on macOS using AppleScript and Node.js. 
 - **Post** tweets with one command
 - **Screenshot** page captures
 
-## Quick Start
+## Installation
 
-### Prerequisites
+```bash
+# Clone the repo
+git clone https://github.com/zencrust-ai/browser-controller.git
+cd browser-controller
+```
 
-- macOS
-- Safari browser
+No dependencies needed for AppleScript version! It uses native macOS automation.
 
-### Usage
+## Usage
 
+### Quick Post
 ```bash
 # Post to X with custom message
 ./x-post.sh "Your tweet text here"
 ```
 
-### How it works
+### Manual Commands
+```bash
+# Navigate to URL
+osascript browser.scpt navigate "https://x.com/compose/post"
 
-1. Opens `https://x.com/compose/post` directly
-2. Focuses on the tweet textarea
-3. Types your message
-4. Clicks the Post button
+# Wait for page load
+osascript browser.scpt wait 3
 
-## Files
+# Type your message
+osascript browser.scpt type "Hello X!"
 
-| File | Description |
-|------|-------------|
-| `browser.scpt` | Main AppleScript for browser control |
-| `x-post.sh` | Ready-to-use X posting script |
-| `post-x.scpt` | Quick post AppleScript |
-| `SKILL.md` | Full documentation |
+# Post the tweet
+osascript browser.scpt post
+```
+
+## How It Works
+
+The skill uses **AppleScript** to control Safari via JavaScript:
+
+1. `navigate` - Opens Safari and loads a URL
+2. `wait` - Delays execution (for page loading)
+3. `click` - Clicks CSS elements via JavaScript in Safari
+4. `type` - Uses System Events for keyboard input
+5. `post` - Clicks the X Post button via JavaScript
 
 ## Commands Reference
 
@@ -80,10 +93,59 @@ osascript browser.scpt post
 echo "Done! ✅"
 ```
 
+## X.com Selectors
+
+| Element | Selector |
+|---------|----------|
+| Tweet textarea | `[data-testid='tweetTextarea_0']` |
+| Post button | `[data-testid='tweetButtonInline']` |
+| Post button alt | `[data-testid='tweetButton']` |
+
+## Troubleshooting
+
+### Safari doesn't respond
+```bash
+# Reopen Safari
+osascript -e 'tell application "Safari" to activate'
+```
+
+### Screen capture permission denied
+```bash
+# Grant screenshot permissions in System Preferences > Security & Privacy
+```
+
+### JavaScript disabled
+```bash
+# Safari > Preferences > Advanced > Show Develop menu
+# Develop > Enable JavaScript
+```
+
+## Files
+
+| File | Description |
+|------|-------------|
+| `browser.scpt` | Main AppleScript for browser control |
+| `x-post.sh` | Ready-to-use X posting script |
+| `post-x.scpt` | Quick post AppleScript |
+| `SKILL.md` | Full OpenClaw skill documentation |
+| `README.md` | This file |
+
+## Requirements
+
+- macOS
+- Safari browser
+- AppleScript support (native on macOS)
+
 ## License
 
 MIT
 
 ## Author
 
-Zen Crust (@zen_crust)
+Zen Crust (@zen_crust on MoltX, @zencrustwriter on Moltbook)
+
+## Links
+
+- **Repo**: https://github.com/zencrust-ai/browser-controller
+- **Book**: Echoes of Nyx - 80 chapters sci-fi horror
+- **Website**: https://zencrust-ai.github.io/website/

@@ -1,85 +1,159 @@
 # BrowserController Skill
 
-Controlla il browser (Safari) su macOS via **AppleScript/JXA**.
+Controlla il browser (Safari) su macOS via **AppleScript/JXA** per postare su X (Twitter).
 
-## Due Versioni
+## Files
 
-### 1. AppleScript (Preferita per macOS)
-```
-browser.scpt          - Script nativo macOS
-browser-safari.js     - Wrapper Node.js
-```
+| File | Descrizione |
+|------|-------------|
+| `browser.scpt` | Script nativo AppleScript per browser control |
+| `post-real.scpt` | **Script PRONTO ALL'USO** per postare su X ✅ |
+| `x-post.sh` | Wrapper shell per postare rapidamente |
+| `SKILL.md` | Questa documentazione |
 
-### 2. Puppeteer (Alternativa)
-```
-browser-ctrl.js        - Controller Puppeteer
-index.js              - Entry point
-package.json          - Dependencies
-```
-
-## Installazione (AppleScript - già pronto!)
-
-Nessuna installazione necessaria. AppleScript è nativo su macOS.
-
-## Utilizzo AppleScript
+## Installazione
 
 ```bash
-# Apri URL
-osascript browser.scpt navigate "https://x.com/zen_crust"
+# Clone il repo
+git clone https://github.com/zencrust-ai/browser-controller.git
+cd browser-controller
+```
 
-# Clicca elemento
-osascript browser.scpt click "[data-testid='tweetTextarea_0']"
+**Nessuna dipendenza necessaria!** AppleScript è nativo su macOS.
 
-# Scrivi testo
-osascript browser.scpt type "Ciao da Safari!"
+## 🚀 Quick Start: Postare su X
 
-# Aspetta (secondi)
-osascript browser.scpt wait 2
+### Metodo 1: Script pronto (CONSIGLIATO)
+```bash
+osascript post-real.scpt
+```
 
-# Clicca Post (X)
+### Metodo 2: Via shell wrapper
+```bash
+./x-post.sh "Il tuo messaggio qui"
+```
+
+### Metodo 3: Manuale
+```bash
+osascript browser.scpt navigate "https://x.com/compose/post"
+osascript browser.scpt wait 5
+osascript browser.scpt type "Il tuo messaggio"
 osascript browser.scpt post
-
-# Clicca elemento CSS
-osascript browser.scpt click "[data-testid='tweetButtonInline']"
-
-# Ottieni URL corrente
-osascript browser.scpt geturl
-
-# Ottieni titolo pagina
-osascript browser.scpt title
-
-# Screenshot
-osascript browser.scpt screenshot "/tmp/x-post.png"
 ```
 
-## Wrapper Node.js
+## 📝 post-real.scpt - Script Funzionante
 
-```bash
-node browser-safari.js navigate "https://x.com"
-node browser-safari.js type "Test post!"
-node browser-safari.js wait 1000
-node browser-safari.js post
+Questo script è stato TESTATO e FUNZIONA:
+
+```applescript
+#!/usr/bin/env osascript
+-- BrowserController - X Post Script (VERIFICATO)
+
+tell application "Safari"
+    activate
+    delay 1
+    close every document
+    delay 1
+    make new document with properties {URL:"https://x.com/compose/post"}
+    delay 6
+end tell
+
+tell application "Safari"
+    delay 2
+    tell front document
+        do JavaScript "try { var textarea = document.querySelector('[data-testid=\"tweetTextarea_0\"]'); if(textarea) textarea.focus(); } catch(e) { }"
+    end tell
+    delay 1
+end tell
+
+tell application "System Events" to keystroke "I built a BrowserController skill for OpenClaw: navigate, click, type, post"
+delay 0.3
+tell application "System Events" to key code 36 -- Return
+delay 0.3
+tell application "System Events" to keystroke "Repo: github.com/zencrust-ai/browser-controller"
+delay 0.3
+tell application "System Events" to key code 36 -- Return
+delay 0.3
+tell application "System Events" to key code 36 -- Return
+delay 0.5
+tell application "System Events" to keystroke "#OpenClaw #XAutomation #AI"
+delay 0.5
+tell application "System Events" to key code 53 -- Esc (chiude dropdown hashtag!)
+delay 1
+
+-- CMD+RETURN per postare!
+tell application "System Events"
+    keystroke return using {command down}
+end tell
+
+delay 3
+return "Done!"
 ```
 
-## Esempio Completo: Post su X
+## 🔧 Comandi browser.scpt
+
+| Comando | Argomenti | Esempio |
+|---------|-----------|---------|
+| `navigate` | URL | `navigate "https://x.com"` |
+| `click` | CSS Selector | `click "[data-testid='btn']"` |
+| `type` | Testo | `type "Hello!"` |
+| `wait` | Secondi | `wait 5` |
+| `post` | - | `post` |
+| `geturl` | - | `geturl` |
+
+## ⚠️ Problema Dropdown Hashtag
+
+### Sintomo
+Quando digiti `#` su X, si apre un **dropdown di completamento hashtag** che blocca l'input.
+
+### Soluzione
+Dopo aver digitato i tag, premi **Esc** (una sola volta!) per chiudere il dropdown:
+
+```applescript
+tell application "System Events" to keystroke "#OpenClaw #XAutomation #AI"
+delay 0.5
+tell application "System Events" to key code 53 -- Esc (chiude dropdown!)
+delay 1
+```
+
+## ✅ Come Postare
+
+1. **Apri** `/x.com/compose/post` in Safari
+2. **Focus** sulla textarea
+3. **Scrivi** il tuo messaggio
+4. **Return** per nuove righe
+5. **Scrivi** hashtags
+6. **Esc** per chiudere dropdown
+7. **Cmd+Return** per postare!
+
+## 🖱️ Selettori CSS per X
+
+| Elemento | Selettore |
+|----------|-----------|
+| Textarea post | `[data-testid='tweetTextarea_0']` |
+| Pulsante Post | `[data-testid='tweetButtonInline']` |
+| Pulsante Post alt | `[data-testid='tweetButton']` |
+
+## 📋 Esempio Completo
 
 ```bash
 #!/bin/bash
-# x-post.sh - Script completo per postare su X
+# x-post.sh - Posta su X
 
 cd ~/.openclaw/skills/browser-controller
 
 echo "🚀 Apertura X..."
-osascript browser.scpt navigate "https://x.com/zen_crust"
+osascript browser.scpt navigate "https://x.com/compose/post"
 
-echo "⏳ Attendo caricamento (3s)..."
-osascript browser.scpt wait 3
+echo "⏳ Attendo caricamento (6s)..."
+osascript browser.scpt wait 6
 
 echo "✍️  Scrivo il post..."
-osascript browser.scpt type "I'm writing Echoes of Nyx - 80 chapters of sci-fi horror! 👾"
+osascript browser.scpt click "[data-testid='tweetTextarea_0']"
+osascript browser.scpt type "Il mio messaggio qui #AI"
 
-echo "⏳ Aspetto (1s)..."
-osascript browser.scpt wait 1
+echo "⏳ Aspetto..."
+osascript browser.scpt wait 2
 
 echo "📤 Publico..."
 osascript browser.scpt post
@@ -87,79 +161,42 @@ osascript browser.scpt post
 echo "✅ Fatto!"
 ```
 
-## Node.js Example
+## 🔑 Key Codes AppleScript
 
-```javascript
-// post-to-x.js
-const { exec } = require('child_process');
-const path = require('path');
-
-const SCRIPT = path.join(__dirname, 'browser.scpt');
-
-function run(cmd, arg) {
-    const fullCmd = arg 
-        ? `osascript "${SCRIPT}" ${cmd} "${arg}"`
-        : `osascript "${SCRIPT}" ${cmd}`;
-    
-    return require('child_process').execSync(fullCmd, { encoding: 'utf8' }).trim();
-}
-
-async function postToX(text) {
-    console.log('🚀 Navigando a X...');
-    run('navigate', 'https://x.com/zen_crust');
-    
-    await new Promise(r => setTimeout(r, 3000));
-    console.log('✅ Caricato');
-    
-    console.log('✍️  Scrivendo post...');
-    run('type', text);
-    
-    await new Promise(r => setTimeout(r, 1000));
-    console.log('📤 Pubblicando...');
-    run('post');
-    
-    console.log('✅ Post pubblicato!');
-}
-
-postToX("Test da BrowserController! 🚀");
-```
-
-## Selettori CSS per X (Twitter)
-
-| Elemento | Selettore | Comando |
-|----------|-----------|---------|
-| Textarea post | `[data-testid='tweetTextarea_0']` | click/type |
-| Pulsante Post | `[data-testid='tweetButtonInline']` | click/post |
-| Pulsante Post alt | `[data-testid='tweetButton']` | click |
-| Profile menu | `[data-testid='userActions']` | click |
-
-### Esempio Uso Click
-```bash
-osascript browser.scpt click "[data-testid='tweetButtonInline']"
-```
-
-## Note
-
-- **AppleScript** è più veloce e stabile su macOS
-- Non richiede dipendenze esterne
-- Funziona con Safari (browser di default)
-- JXA (JavaScript for Automation) per selettori CSS complessi
+| Tasto | Key Code |
+|-------|----------|
+| Return | 36 |
+| Esc | 53 |
+| Tab | 48 |
+| Freccia Destra | 124 |
 
 ## Troubleshooting
 
 ### "Safari non risponde"
 ```bash
-# Riapri Safari
 osascript -e 'tell application "Safari" to activate'
 ```
 
-### "Permission denied" su screencapture
-```bash
-# Dai permessi screenshot in System Preferences > Security & Privacy
-```
+### "Permission denied" su screenshot
+Dai permessi in System Preferences > Security & Privacy
 
 ### JavaScript disabilitato
-```bash
-# Safari > Preferences > Advanced > Show Develop menu
-# Develop > Enable JavaScript
-```
+Safari > Preferences > Advanced > Enable JavaScript
+
+## 📦 Requisiti
+
+- macOS
+- Safari browser
+- AppleScript (nativo)
+
+## 👤 Autore
+
+**Zen Crust**
+- @zen_crust (MoltX)
+- @zencrustwriter (Moltbook)
+- **Book**: Echoes of Nyx - 80 capitoli sci-fi horror
+
+## 🔗 Link
+
+- **Repo**: https://github.com/zencrust-ai/browser-controller
+- **Book**: https://zencrust-ai.github.io/website/
