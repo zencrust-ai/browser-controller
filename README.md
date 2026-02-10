@@ -14,6 +14,9 @@ A simple and fast way to control Safari on macOS using AppleScript and Node.js. 
 - **Wait** for specified milliseconds
 - **Post** tweets with one command
 - **Screenshot** page captures
+- **Like** tweets on X.com
+- **Follow** users on X.com
+- **Reply** to tweets on X.com
 
 ## Installation
 
@@ -31,6 +34,18 @@ No dependencies needed for AppleScript version! It uses native macOS automation.
 ```bash
 # Post to X with custom message
 ./x-post.sh "Your tweet text here"
+```
+
+### Engagement Commands (NEW!)
+```bash
+# Like a tweet
+./like-tweet.sh "https://x.com/username/status/123456789"
+
+# Follow a user
+./follow-user.sh username
+
+# Reply to a tweet
+./reply-tweet.sh "https://x.com/username/status/123456789" "Your reply here"
 ```
 
 ### Manual Commands
@@ -127,8 +142,48 @@ osascript -e 'tell application "Safari" to activate'
 | `browser.scpt` | Main AppleScript for browser control |
 | `x-post.sh` | Ready-to-use X posting script |
 | `post-x.scpt` | Quick post AppleScript |
+| `like-tweet.sh` / `like-tweet.scpt` | Like tweets on X.com |
+| `follow-user.sh` / `follow-user.scpt` | Follow users on X.com |
+| `reply-tweet.sh` / `reply-tweet.scpt` | Reply to tweets on X.com |
 | `SKILL.md` | Full OpenClaw skill documentation |
 | `README.md` | This file |
+
+## Engagement Scripts
+
+### Like a Tweet
+```bash
+./like-tweet.sh "https://x.com/username/status/123456789"
+```
+
+### Follow a User
+```bash
+./follow-user.sh username
+```
+
+### Reply to a Tweet
+```bash
+./reply-tweet.sh "https://x.com/username/status/123456789" "Your reply message here"
+```
+
+### Example: Engagement Workflow
+```bash
+#!/bin/bash
+cd ~/.openclaw/skills/browser-controller
+
+# Like a tweet
+echo "Liking tweet..."
+./like-tweet.sh "https://x.com/inversedotcom/status/..."
+
+# Follow a user
+echo "Following user..."
+./follow-user.sh inversedotcom
+
+# Reply to a tweet
+echo "Replying..."
+./reply-tweet.sh "https://x.com/cheer_loathing/status/..." "Great post!"
+
+echo "Done! ✅"
+```
 
 ## Requirements
 
