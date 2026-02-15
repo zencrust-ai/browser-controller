@@ -30,11 +30,16 @@ No dependencies needed for AppleScript version! It uses native macOS automation.
 
 ## Usage
 
-### Quick Post
+### Quick Post (Dynamic Content)
 ```bash
-# Post to X with custom message
-./x-post.sh "Your tweet text here"
+# Post to X with custom message (RECOMMENDED)
+./x-post-dynamic.sh "Your tweet text here"
 ```
+
+### ⚠️ WARNING: post-real.scpt Has Hardcoded Content
+The file `post-real.scpt` contains **hardcoded tweet content** for the media plan. Do NOT use it for custom posts - it will post the same content every time!
+
+**Use `x-post-dynamic.sh` instead for custom content.**
 
 ### Engagement Commands (NEW!)
 ```bash

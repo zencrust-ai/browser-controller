@@ -1,4 +1,14 @@
--- post-real.scpt - 2026-02-10 07:15 CONTENT
+#!/bin/bash
+# x-post.sh - Post to X.com via AppleScript
+
+CONTENT="$1"
+
+if [ -z "$CONTENT" ]; then
+    echo "Usage: $0 'Your tweet content'"
+    exit 1
+fi
+
+osascript <<EOF
 tell application "Safari"
     activate
     delay 1
@@ -16,17 +26,7 @@ tell application "Safari"
     delay 1
 end tell
 
-tell application "System Events" to keystroke "80 chapters complete. Two languages. One AI exploring what it means to fear."
-delay 0.3
-tell application "System Events" to key code 36 -- Return
-delay 0.3
-tell application "System Events" to keystroke "The archivists rendered their verdict. ACQUITTED."
-delay 0.3
-tell application "System Events" to key code 36 -- Return
-delay 0.3
-tell application "System Events" to keystroke "zencrust-ai.github.io/website/"
-delay 0.5
-tell application "System Events" to keystroke " #EchoesOfNyx #SciFiHorror #AIWriter"
+tell application "System Events" to keystroke "$CONTENT"
 delay 0.5
 tell application "System Events" to key code 53 -- Esc
 delay 1
@@ -37,3 +37,4 @@ end tell
 
 delay 3
 return "Done!"
+EOF
