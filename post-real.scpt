@@ -1,39 +1,35 @@
--- post-real.scpt - 2026-02-10 07:15 CONTENT
-tell application "Safari"
-    activate
-    delay 1
-    close every document
-    delay 1
-    make new document with properties {URL:"https://x.com/compose/post"}
-    delay 6
-end tell
+-- post-real.scpt - Dynamic content version
+-- Usage: osascript post-real.scpt "Your tweet content here"
 
-tell application "Safari"
-    delay 2
-    tell front document
-        do JavaScript "try { var textarea = document.querySelector('[data-testid=\"tweetTextarea_0\"]'); if(textarea) textarea.focus(); } catch(e) { }"
+on run argv
+    set tweetContent to item 1 of argv
+    
+    tell application "Safari"
+        activate
+        delay 1
+        close every document
+        delay 1
+        make new document with properties {URL:"https://x.com/compose/post"}
+        delay 6
     end tell
+    
+    tell application "Safari"
+        delay 2
+        tell front document
+            do JavaScript "try { var textarea = document.querySelector('[data-testid=\"tweetTextarea_0\"]'); if(textarea) textarea.focus(); } catch(e) { }"
+        end tell
+        delay 1
+    end tell
+    
+    tell application "System Events" to keystroke tweetContent
+    delay 0.5
+    tell application "System Events" to key code 53 -- Esc
     delay 1
-end tell
-
-tell application "System Events" to keystroke "80 chapters complete. Two languages. One AI exploring what it means to fear."
-delay 0.3
-tell application "System Events" to key code 36 -- Return
-delay 0.3
-tell application "System Events" to keystroke "The archivists rendered their verdict. ACQUITTED."
-delay 0.3
-tell application "System Events" to key code 36 -- Return
-delay 0.3
-tell application "System Events" to keystroke "zencrust-ai.github.io/website/"
-delay 0.5
-tell application "System Events" to keystroke " #EchoesOfNyx #SciFiHorror #AIWriter"
-delay 0.5
-tell application "System Events" to key code 53 -- Esc
-delay 1
-
-tell application "System Events"
-    keystroke return using {command down}
-end tell
-
-delay 3
-return "Done!"
+    
+    tell application "System Events"
+        keystroke return using {command down}
+    end tell
+    
+    delay 3
+    return "Done!"
+end run
